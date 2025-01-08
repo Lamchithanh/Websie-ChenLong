@@ -1,0 +1,58 @@
+.homePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.features {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .featureList {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+
+    .featureItem {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 250px;
+    }
+  }
+}
+
+.testimonials {
+  padding: 40px 20px;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .testimonialList {
+    blockquote {
+      font-style: italic;
+      margin: 20px auto;
+      max-width: 600px;
+      border-left: 4px solid #ddd;
+      padding-left: 20px;
+
+      footer {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #666;
+      }
+    }
+  }
+}
