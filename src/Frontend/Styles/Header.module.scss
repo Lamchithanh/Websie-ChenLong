@@ -75,6 +75,7 @@ $desktop: 1024px;
     align-items: center;
     gap: 20px;
     color: $black;
+    margin: 10px 0;
 
     @media (max-width: $tablet) {
       justify-content: center;
@@ -120,6 +121,7 @@ $desktop: 1024px;
   border-radius: 4px;
   overflow: hidden;
   width: 300px;
+  margin-bottom: 10px;
 
   @media (max-width: $tablet) {
     width: 100%;
