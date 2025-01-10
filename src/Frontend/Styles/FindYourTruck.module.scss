@@ -3,13 +3,19 @@
   text-align: center;
 
   .container {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
   }
 
   h2 {
     font-size: 2rem;
     margin-bottom: 20px;
+    @media (max-width: 768px) {
+      font-size: 1.8rem;
+    }
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
   }
 
   /* Tabs */
@@ -18,6 +24,7 @@
     justify-content: center;
     gap: 15px;
     margin-bottom: 30px;
+    flex-wrap: wrap; // Cho phép các nút xuống hàng nếu không đủ không gian
 
     button {
       padding: 10px 20px;
@@ -66,42 +73,105 @@
       }
     }
 
+    .arrowLeft,
+    .arrowRight {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+      border: none;
+    }
+
+    .arrowLeft {
+      left: 10px;
+    }
+
+    .arrowRight {
+      right: 10px;
+    }
+
     .slick-prev {
-      left: -35px;
+      left: -20px;
+      @media (max-width: 768px) {
+        left: -10px;
+      }
     }
 
     .slick-next {
-      right: -35px;
+      right: -20px;
+      @media (max-width: 768px) {
+        right: -10px;
+      }
     }
 
     .slick-slide {
       display: flex !important;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
     }
 
-    .truckItem {
-      img {
-        max-width: 100%;
-        border-radius: 10px;
-        transition: transform 0.3s ease;
+    .slick-slide {
+      margin: 0; // Giảm margin giữa các slides
 
-        &:hover {
-          transform: scale(1.05);
-        }
+      @media (max-width: 480px) {
+        margin: 0;
+        padding: 0 10px; // Thêm padding cho mobile
       }
+    }
 
-      h3 {
-        font-size: 1rem;
-        margin-top: 10px;
+    .truckItem {
+      max-width: 160px;
+      margin: 0 auto; // Căn giữa item
+
+      @media (max-width: 480px) {
+        max-width: 100%; // Cho phép ảnh rộng tối đa trên mobile
+        margin: 0;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+      margin: 0 auto; // Căn giữa ảnh
+
+      @media (max-width: 480px) {
+        width: 100%; // Đảm bảo ảnh lấp đầy không gian
+        object-fit: contain;
+      }
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin-top: 10px;
+
+      @media (max-width: 480px) {
+        .truckItem {
+          max-width: 140px;
+        }
       }
     }
   }
+}
 
-  /* Adjust truckItem for centering */
-  .truckItem {
-    text-align: center;
-    max-width: 200px;
-    margin: auto;
+.sliderItem {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 10px;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
   }
 }

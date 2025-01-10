@@ -1,10 +1,21 @@
-import { useState } from "react";
 import styles from "../../Styles/Navbar.module.scss";
+import { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState("");
   const [openSubmenus, setOpenSubmenus] = useState({});
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Thời gian hiệu ứng (ms)
+      offset: 50, // Khoảng cách scroll để kích hoạt hiệu ứng
+      easing: "ease-in-out", // Kiểu easing
+      once: true, // Hiệu ứng chỉ chạy một lần
+    });
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,6 +39,7 @@ const Navbar = () => {
       <button
         className={`${styles.menuButton} ${isMenuOpen ? styles.active : ""}`}
         onClick={toggleMenu}
+        data-aos="fade-down" // Hiệu ứng fade-down
       >
         <span></span>
         <span></span>
@@ -35,12 +47,22 @@ const Navbar = () => {
       </button>
 
       {isMenuOpen && (
-        <div className={styles.overlay} onClick={toggleMenu}></div>
+        <div
+          className={styles.overlay}
+          onClick={toggleMenu}
+          data-aos="fade-in" // Hiệu ứng fade-in
+        ></div>
       )}
 
-      <ul className={`${styles.navList} ${isMenuOpen ? styles.open : ""}`}>
-        <li className={styles.navItem}>
+      {/* Danh sách menu */}
+      <ul
+        className={`${styles.navList} ${isMenuOpen ? styles.open : ""}`}
+        data-aos="fade-left" // Hiệu ứng fade từ trái sang
+      >
+        {/* Mục "ABOUT US" */}
+        <li className={styles.navItem} data-aos="zoom-in">
           <div className={styles.navHeader}>
+            {/* Nút bật/tắt dropdown */}
             <button
               className={styles.navLink}
               onClick={() => toggleDropdown("about")}

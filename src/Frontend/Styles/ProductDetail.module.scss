@@ -1,0 +1,471 @@
+.productDetailContainer {
+  padding: 40px 0;
+  background-color: #f5f5f5;
+
+  section:nth-child(2) {
+    background-color: #fff;
+    padding: 40px 0 60px;
+    margin-top: 20px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  @media (max-width: 1024px) {
+    padding: 0 15px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 10px;
+  }
+}
+
+.truckDetailSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.textContent {
+  flex: 0 1 40%;
+  padding-right: 40px;
+}
+
+.truckTitle {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.imageContent {
+  flex: 0 1 60%;
+
+  img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin-left: auto;
+  }
+}
+
+.truckImage {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 60px;
+
+  @media (max-width: 1024px) {
+    gap: 30px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+}
+
+.productImageSection {
+  .mainProductImage {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    padding: 10px;
+
+    @media (max-width: 768px) {
+      max-height: 400px;
+    }
+
+    @media (max-width: 480px) {
+      max-height: 300px;
+    }
+  }
+
+  .thumbnailGallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    scroll-behavior: smooth;
+    position: relative;
+
+    @media (max-width: 1024px) {
+      max-width: 450px;
+    }
+
+    @media (max-width: 768px) {
+      max-width: 400px;
+    }
+
+    @media (max-width: 480px) {
+      max-width: 280px;
+      gap: 8px;
+    }
+
+    .thumbnailImage {
+      width: 80px;
+      height: 80px;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      object-fit: cover;
+      transition: all 0.3s ease;
+
+      @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+      }
+
+      @media (max-width: 480px) {
+        width: 60px;
+        height: 60px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+
+      &.activeThumbnail {
+        border: 2px solid #ff4d4f;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  position: relative;
+
+  .galleryNavButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #eee;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+    font-size: 18px;
+    color: #666;
+
+    @media (max-width: 768px) {
+      width: 30px;
+      height: 30px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 480px) {
+      width: 25px;
+      height: 25px;
+      font-size: 14px;
+    }
+
+    &:hover {
+      background: #fff;
+      color: #ff4d4f;
+      border-color: #ff4d4f;
+    }
+
+    &.prev {
+      left: -5px;
+    }
+
+    &.next {
+      right: -20px;
+    }
+  }
+}
+
+.productInfoSection {
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+
+  .productModel {
+    font-size: 24px;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
+  }
+
+  .productTitle {
+    font-size: 32px;
+
+    @media (max-width: 768px) {
+      font-size: 26px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 22px;
+    }
+  }
+
+  .productSpecs {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+
+    .productSpecItem {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+
+      strong {
+        color: #666;
+        margin-right: 10px;
+      }
+
+      @media (max-width: 480px) {
+        padding: 10px 0;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .actionButtons {
+    display: flex;
+    gap: 15px;
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .buyNowButton {
+      background-color: #ff4d4f;
+      color: white;
+
+      &:hover {
+        background-color: #ff7875;
+      }
+    }
+
+    .viewMoreButton {
+      background-color: #fff;
+      border: 1px solid #d9d9d9;
+      color: #333;
+
+      &:hover {
+        border-color: #ff4d4f;
+        color: #ff4d4f;
+      }
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        width: 100%;
+        padding: 10px 20px;
+      }
+    }
+  }
+}
+
+.descriptionSection {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.descriptionText {
+  flex: 1;
+}
+
+.descriptionTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.descriptionPoints {
+  list-style: disc;
+  padding-left: 20px;
+  line-height: 1.8;
+  color: #555;
+}
+
+.descriptionImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+      height: 300px;
+    }
+  }
+}
+
+.tabsNav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.tabButton {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &:hover {
+    color: #ff4d4f;
+  }
+
+  &.activeTab {
+    color: #ff4d4f;
+    font-weight: bold;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #ff4d4f;
+    }
+  }
+}
+
+.descriptionSection {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .tabsNav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tabButton {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .descriptionSection {
+    flex-direction: column;
+  }
+
+  .descriptionImage {
+    margin-top: 20px;
+  }
+
+  .productDetailContainer {
+    section:nth-child(2) {
+      padding: 30px 0 40px;
+    }
+  }
+
+  .truckDetailSection {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .textContent {
+    flex: 1;
+    padding-right: 0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .imageContent {
+    flex: 1;
+    width: 100%;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+
+  .thumbnailGallery {
+    max-width: 320px;
+
+    .thumbnailImage {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}

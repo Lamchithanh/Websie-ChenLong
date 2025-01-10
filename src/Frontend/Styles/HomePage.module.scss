@@ -6,6 +6,17 @@
   width: 100%;
 }
 
+.bannerContainer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.banner {
+  width: 100%;
+  display: block; // Đảm bảo phần tử không bị giới hạn bởi các thuộc tính inline
+}
+
 .welcomeSection {
   padding: 0;
   margin: 0;
