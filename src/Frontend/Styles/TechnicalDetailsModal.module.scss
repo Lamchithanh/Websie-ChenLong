@@ -182,7 +182,7 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 
   &:hover {
     color: $primary-color;
-    background: lighten($hover-bg, 1%);
+    background: #fafbfc;
   }
 
   .toggleIcon {

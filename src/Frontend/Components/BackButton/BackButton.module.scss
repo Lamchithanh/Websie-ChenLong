@@ -1,0 +1,74 @@
+.backButton {
+  position: fixed;
+  top: 30%;
+  left: 7%;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: white;
+  color: #ff4d4f;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  span {
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: #ff7875;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+
+    svg {
+      transform: translateX(-3px);
+    }
+
+    span {
+      transform: translateX(-3px);
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  animation: slideIn 0.3s ease-out;
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    top: 35%;
+    left: 7%;
+    padding: 4px 10px;
+    font-size: 12px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

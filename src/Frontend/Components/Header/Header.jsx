@@ -1,18 +1,40 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import styles from "../../Styles/Header.module.scss";
-import { NavLink } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Kiểm tra token và thông tin user từ localStorage
+    const token = localStorage.getItem("token");
+    const userInfo = localStorage.getItem("userInfo");
+    if (token && userInfo) {
+      setUser(JSON.parse(userInfo));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Xóa thông tin đăng nhập
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    setUser(null);
+    // Đóng menu
+    setIsOffCanvasOpen(false);
+    // Hiển thị thông báo
+    toast.success("Đăng xuất thành công!");
+  };
 
   useEffect(() => {
     Aos.init({
-      duration: 1000, // Thời gian animation (ms)
-      offset: 50, // Khoảng cách trước khi animation bắt đầu
-      once: true, // Animation chỉ chạy một lần
+      duration: 1000,
+      offset: 50,
+      once: true,
     });
   }, []);
 
@@ -20,13 +42,33 @@ const Header = () => {
     navigate("/");
   };
 
+  const handleSettingsClick = (e) => {
+    e.preventDefault();
+    setIsOffCanvasOpen(!isOffCanvasOpen);
+  };
+
+  // Đóng off-canvas khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        !event.target.closest(`.${styles.offCanvas}`) &&
+        !event.target.closest(`.${styles.settingsButton}`)
+      ) {
+        setIsOffCanvasOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div
           className={styles.logoSection}
-          data-aos="fade-down" // Hiệu ứng fade từ trên xuống
-          data-aos-duration="1000" // Thời gian hiệu ứng (ms)
+          data-aos="fade-down"
+          data-aos-duration="1000"
         >
           <span className={styles.logo} onClick={handleLogoClick}>
             CTCOIN
@@ -40,12 +82,12 @@ const Header = () => {
       <div></div>
       <div
         className={styles.rightSection}
-        data-aos="fade-up" // Hiệu ứng fade từ dưới lên
+        data-aos="fade-up"
         data-aos-duration="1000"
       >
         <div
           className={styles.rightSection_one}
-          data-aos="zoom-in" // Hiệu ứng zoom-in cho phần này
+          data-aos="zoom-in"
           data-aos-duration="1000"
         >
           <NavLink href="tel:+4631666000" className={styles.phone}>
@@ -81,10 +123,26 @@ const Header = () => {
               <span>Toàn cầu</span>
             </div>
           </NavLink>
+          {/* Cài đặt với Off-canvas */}
+          <div className={styles.settingsWrapper}>
+            <button
+              className={styles.settingsButton}
+              onClick={handleSettingsClick}
+            >
+              <div className={styles.icon_header}>
+                <img
+                  width="15"
+                  height="15"
+                  src="https://img.icons8.com/ios/50/settings--v1.png"
+                  alt="settings--v1"
+                />
+              </div>
+            </button>
+          </div>
         </div>
         <div
           className={styles.searchBox}
-          data-aos="fade-left" // Hiệu ứng fade từ trái sang
+          data-aos="fade-left"
           data-aos-duration="1000"
         >
           <input
@@ -102,6 +160,105 @@ const Header = () => {
           </button>
         </div>
       </div>
+
+      {/* Off-canvas Menu */}
+      <div
+        className={`${styles.offCanvas} ${isOffCanvasOpen ? styles.open : ""}`}
+      >
+        <div className={styles.offCanvasHeader}>
+          <h3>Menu</h3>
+          <button
+            className={styles.closeButton}
+            onClick={() => setIsOffCanvasOpen(false)}
+          >
+            ×
+          </button>
+        </div>
+        <div className={styles.offCanvasContent}>
+          {user ? (
+            // Menu khi đã đăng nhập
+            <>
+              <div className={styles.userInfo}>
+                <img
+                  src="https://img.icons8.com/ios/50/user-circle.png"
+                  alt="user"
+                  width="40"
+                  height="40"
+                />
+                <div className={styles.userDetails}>
+                  <span className={styles.userName}>{user.fullName}</span>
+                  <span className={styles.userEmail}>{user.email}</span>
+                </div>
+              </div>
+
+              <div className={styles.menuDivider} />
+
+              <NavLink to="/profile" className={styles.menuItem}>
+                <img
+                  src="https://img.icons8.com/ios/50/user--v1.png"
+                  alt="profile"
+                  width="20"
+                  height="20"
+                />
+                <span>Thông tin cá nhân</span>
+              </NavLink>
+
+              <NavLink to="/orders" className={styles.menuItem}>
+                <img
+                  src="https://img.icons8.com/ios/50/purchase-order.png"
+                  alt="orders"
+                  width="20"
+                  height="20"
+                />
+                <span>Đơn hàng của tôi</span>
+              </NavLink>
+
+              <div className={styles.menuDivider} />
+
+              <button onClick={handleLogout} className={styles.menuItem}>
+                <img
+                  src="https://img.icons8.com/ios/50/logout-rounded.png"
+                  alt="logout"
+                  width="20"
+                  height="20"
+                />
+                <span>Đăng xuất</span>
+              </button>
+            </>
+          ) : (
+            // Menu khi chưa đăng nhập
+            <>
+              <NavLink to="/login" className={styles.menuItem}>
+                <img
+                  src="https://img.icons8.com/ios/50/login-rounded.png"
+                  alt="login"
+                  width="20"
+                  height="20"
+                />
+                <span>Đăng nhập</span>
+              </NavLink>
+
+              <NavLink to="/register" className={styles.menuItem}>
+                <img
+                  src="https://img.icons8.com/ios/50/add-user-male.png"
+                  alt="register"
+                  width="20"
+                  height="20"
+                />
+                <span>Đăng ký</span>
+              </NavLink>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      {isOffCanvasOpen && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setIsOffCanvasOpen(false)}
+        />
+      )}
     </header>
   );
 };

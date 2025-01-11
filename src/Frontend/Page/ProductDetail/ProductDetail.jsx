@@ -1,12 +1,17 @@
 import { useState, useRef } from "react";
 import styles from "../../Styles/ProductDetail.module.scss";
 import TechnicalDetailsModal from "./TechnicalDetailsModal";
+import OrderModal from "./OrderModal";
+import { Navigate } from "react-router-dom";
+import { LeftCircleOutlined } from "@ant-design/icons";
+import BackButton from "../../Components/BackButton/BackButton";
 
 const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("overview"); // Tab mặc định là "overview"
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Thêm state cho ảnh hiện tại
   const galleryRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   // Dữ liệu mẫu cho các tab
   const tabsData = {
@@ -151,6 +156,7 @@ const ProductDetail = () => {
 
   return (
     <div className={styles.productDetailContainer}>
+      <BackButton />
       {/* hình ảnh giới thiệu */}
       <section className={styles.truckDetailSection}>
         <div className={styles.textContent}>
@@ -226,7 +232,12 @@ const ProductDetail = () => {
                 ))}
               </ul>
               <div className={styles.actionButtons}>
-                <button className={styles.buyNowButton}>Mua Ngay</button>
+                <button
+                  className={styles.buyNowButton}
+                  onClick={() => setIsOrderModalOpen(true)}
+                >
+                  Mua Ngay
+                </button>
                 <button
                   className={styles.viewMoreButton}
                   onClick={() => setIsModalOpen(true)}
@@ -280,6 +291,16 @@ const ProductDetail = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         productDetails={technicalDetails}
+      />
+
+      <OrderModal
+        isOpen={isOrderModalOpen}
+        onClose={() => setIsOrderModalOpen(false)}
+        productInfo={{
+          name: sampleProduct.name,
+          model: sampleProduct.model,
+          image: sampleProduct.image,
+        }}
       />
     </div>
   );

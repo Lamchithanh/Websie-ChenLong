@@ -1,9 +1,11 @@
 import styles from "../../Styles/Navbar.module.scss";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState("");
   const [openSubmenus, setOpenSubmenus] = useState({});
@@ -32,6 +34,11 @@ const Navbar = () => {
       ...prev,
       [sectionId]: !prev[sectionId],
     }));
+  };
+
+  const handleTrucksClick = () => {
+    navigate("/product-list");
+    setIsMenuOpen(false);
   };
 
   return (
@@ -186,7 +193,9 @@ const Navbar = () => {
           <button className={styles.navLink}>NEWS & INSIGHTS</button>
         </li>
         <li className={styles.navItem}>
-          <button className={styles.navLink}>TRUCKS</button>
+          <button onClick={handleTrucksClick} className={styles.navLink}>
+            TRUCKS
+          </button>
         </li>
         <li className={styles.navItem}>
           <button className={styles.navLink}>SERVICES</button>

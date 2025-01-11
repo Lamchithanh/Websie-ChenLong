@@ -1,96 +1,78 @@
-import AOS from "aos";
-import "aos/dist/aos.css"; // Import CSS của AOS
-import { useEffect, useState } from "react"; // Để khởi tạo AOS khi component mount
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import styles from "../../Styles/FindYourTruck.module.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const FindYourTruck = () => {
   const navigate = useNavigate();
+  const [trucks, setTrucks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Thời gian animation (ms)
-      offset: 50, // Khoảng cách trước khi animation bắt đầu
-      once: true, // Chạy animation một lần khi scroll vào view
+      duration: 1000,
+      offset: 50,
+      once: true,
     });
   }, []);
 
-  const truckData = {
-    All: [
-      {
-        model: "579",
-        src: "https://www.peterbilt.com/static-assets/images/truck/Peterbilt%20579%20UL.png",
-      },
-      {
-        model: "589",
-        src: "https://www.peterbilt.com/static-assets/images/truck/589-thumb.webp",
-      },
-      {
-        model: "567",
-        src: "https://www.peterbilt.com/static-assets/images/truck/567-thumb.webp",
-      },
-      {
-        model: "520",
-        src: "https://www.peterbilt.com/static-assets/images/truck/520-thumb.webp",
-      },
-      {
-        model: "548",
-        src: "https://www.peterbilt.com/static-assets/images/truck/548-thumb.webp",
-      },
-    ],
-    "On-Highway": [
-      {
-        model: "579",
-        src: "https://www.peterbilt.com/static-assets/images/truck/579ev-sm.webp",
-      },
-      {
-        model: "589",
-        src: "https://www.peterbilt.com/static-assets/images/truck/589-thumb.webp",
-      },
-    ],
-    Vocational: [
-      {
-        model: "567",
-        src: "https://www.peterbilt.com/static-assets/images/truck/567-thumb.webp",
-      },
-      {
-        model: "520",
-        src: "https://www.peterbilt.com/static-assets/images/truck/520ev-sm.webp",
-      },
-    ],
-    "Medium Duty": [
-      {
-        model: "520",
-        src: "https://www.peterbilt.com/static-assets/images/truck/520ev-sm.webp",
-      },
-    ],
-    "Zero Emission": [
-      {
-        model: "548",
-        src: "https://www.peterbilt.com/static-assets/images/truck/548-thumb.webp",
-      },
-    ],
-  };
+  // Fetch categories khi component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/orders/truck-categories"
+        );
+        const data = await response.json();
+        if (data.success) {
+          setCategories(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  const [activeCategory, setActiveCategory] = useState("All");
+    fetchCategories();
+  }, []);
 
-  const getSliderSettings = (category) => {
-    const itemCount = truckData[category].length;
-    const duplicatedItems = Array(Math.ceil(5 / itemCount))
-      .fill([...truckData[category]])
-      .flat();
+  // Fetch trucks data khi category thay đổi
+  useEffect(() => {
+    const fetchTrucks = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/orders/trucks?category=${activeCategory}`
+        );
+        const data = await response.json();
+        if (data.success) {
+          setTrucks(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching trucks:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchTrucks();
+  }, [activeCategory]);
+
+  const getSliderSettings = () => {
+    const itemCount = trucks.length;
     return {
       dots: false,
-      infinite: true, // Ensures that the slider loops
+      infinite: trucks.length > 5,
       speed: 500,
       slidesToShow: Math.min(5, Math.max(itemCount, 1)),
       slidesToScroll: 1,
       centerMode: false,
-      arrows: true,
+      arrows: trucks.length > 5,
       prevArrow: <button className={styles.arrowLeft}>&#10094;</button>,
       nextArrow: <button className={styles.arrowRight}>&#10095;</button>,
       responsive: [
@@ -98,53 +80,26 @@ const FindYourTruck = () => {
           breakpoint: 1024,
           settings: {
             slidesToShow: Math.min(3, Math.max(itemCount, 2)),
-            arrows: true,
+            arrows: trucks.length > 3,
           },
         },
         {
           breakpoint: 768,
           settings: {
             slidesToShow: Math.min(3, itemCount),
-            arrows: true,
+            arrows: trucks.length > 3,
           },
         },
         {
           breakpoint: 480,
           settings: {
-            slidesToShow: 2,
-            arrows: true,
+            slidesToShow: Math.min(2, itemCount),
+            arrows: trucks.length > 2,
           },
         },
       ],
     };
   };
-
-  const sampleProducts = [
-    {
-      id: "1",
-      model: "589",
-      name: "Xe Tải Peterbilt",
-      image: "https://via.placeholder.com/400x300",
-      gallery: [
-        "https://via.placeholder.com/100x100",
-        "https://via.placeholder.com/100x100",
-        "https://via.placeholder.com/100x100",
-      ],
-      specs: [
-        { label: "Lớp học", value: "8" },
-        { label: "Được sử dụng cho", value: "Trên Đường Cao Tốc" },
-        { label: "Công suất tối đa", value: "405 - 605 mã lực" },
-        { label: "Mô-men xoắn cực đại", value: "1.450 - 2.050 lb-ft" },
-        {
-          label: "Trục trước và hệ thống treo",
-          value: "12.000 - 22.800 pound",
-        },
-        { label: "Trục sau và hệ thống treo", value: "21.000 - 78.000 pound" },
-        { label: "Người ngủ", value: '44" - 80"' },
-      ],
-    },
-    // Thêm các sản phẩm mẫu khác...
-  ];
 
   const handleProductClick = () => {
     navigate("/product");
@@ -155,10 +110,12 @@ const FindYourTruck = () => {
       <div className={styles.container}>
         <h2 data-aos="fade-up">Find Your Truck</h2>
         <div className={styles.tabs} data-aos="fade-up">
-          {Object.keys(truckData).map((category) => (
+          {categories.map((category) => (
             <button
               key={category}
-              className={activeCategory === category ? styles.activeTab : ""}
+              className={`${styles.tabButton} ${
+                activeCategory === category ? styles.activeTab : ""
+              } ${trucks.length === 0 ? styles.disabled : ""}`}
               onClick={() => setActiveCategory(category)}
             >
               {category}
@@ -166,11 +123,11 @@ const FindYourTruck = () => {
           ))}
         </div>
         <div className={styles.sliderWrapper} data-aos="zoom-in">
-          <Slider {...getSliderSettings(activeCategory)}>
-            {Array(Math.ceil(5 / truckData[activeCategory].length))
-              .fill([...truckData[activeCategory]])
-              .flat()
-              .map((truck, index) => (
+          {loading ? (
+            <div className={styles.loading}>Loading...</div>
+          ) : trucks.length > 0 ? (
+            <Slider {...getSliderSettings()}>
+              {trucks.map((truck, index) => (
                 <div
                   key={index}
                   className={styles.truckItem}
@@ -186,7 +143,12 @@ const FindYourTruck = () => {
                   <h3>Model {truck.model}</h3>
                 </div>
               ))}
-          </Slider>
+            </Slider>
+          ) : (
+            <div className={styles.noProducts}>
+              Không có sản phẩm nào trong danh mục này
+            </div>
+          )}
         </div>
       </div>
     </section>
