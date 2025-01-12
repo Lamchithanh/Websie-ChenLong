@@ -1,17 +1,69 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useLoading } from "../../contexts/LoadingContext";
 import styles from "../../Styles/ProductDetail.module.scss";
 import TechnicalDetailsModal from "./TechnicalDetailsModal";
 import OrderModal from "./OrderModal";
-import { Navigate } from "react-router-dom";
-import { LeftCircleOutlined } from "@ant-design/icons";
 import BackButton from "../../Components/BackButton/BackButton";
+import { API_URL } from "../../../config/api";
+import { useParams } from "react-router-dom";
+import { ArrowDownOutlined } from "@ant-design/icons";
+import Defaultimage from "../../../assets/Image/Image_Chenglong.jpg";
 
 const ProductDetail = () => {
-  const [activeTab, setActiveTab] = useState("overview"); // Tab mặc định là "overview"
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Thêm state cho ảnh hiện tại
+  const [activeTab, setActiveTab] = useState("overview");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [specifications, setSpecifications] = useState(null);
+  const [productInfo, setProductInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const galleryRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const { id } = useParams();
+  const detailsRef = useRef(null);
+  const { loading, showLoading, hideLoading } = useLoading();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        showLoading("Đang tải thông tin sản phẩm...");
+        setIsLoading(true);
+
+        // Fetch product info
+        const productResponse = await fetch(`${API_URL}/products/${id}`);
+        const productData = await productResponse.json();
+
+        if (productData.success) {
+          setProductInfo(productData.data);
+        }
+
+        // Fetch specifications
+        const specResponse = await fetch(
+          `${API_URL}/products/${id}/specifications`
+        );
+        const specData = await specResponse.json();
+
+        if (specData.success) {
+          setSpecifications(specData.data);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+        hideLoading();
+      }
+    };
+
+    if (id) {
+      fetchData();
+    }
+  }, [id, showLoading, hideLoading]);
+
+  if (loading || isLoading) return null;
 
   // Dữ liệu mẫu cho các tab
   const tabsData = {
@@ -154,32 +206,79 @@ const ProductDetail = () => {
     },
   };
 
+  const formatSpecifications = () => {
+    if (!specifications) return [];
+
+    return [
+      { label: "Lớp học", value: specifications.class },
+      { label: "Được sử dụng cho", value: specifications.used_for },
+      { label: "Công suất tối đa", value: specifications.max_horsepower },
+      { label: "Mô-men xoắn cực đại", value: specifications.peak_torque },
+      {
+        label: "Trục trước và hệ thống treo",
+        value: specifications.front_axle_suspension,
+      },
+      {
+        label: "Trục sau và hệ thống treo",
+        value: specifications.rear_axle_suspension,
+      },
+      { label: "Người ngủ", value: specifications.sleeper },
+    ];
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  const scrollToDetails = () => {
+    detailsRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <div className={styles.productDetailContainer}>
       <BackButton />
       {/* hình ảnh giới thiệu */}
       <section className={styles.truckDetailSection}>
         <div className={styles.textContent}>
-          <h1 className={styles.truckTitle}>Volvo FH16 Aero</h1>
-          <p>
-            <strong>Applications:</strong> Heavy transport assignments
-          </p>
-          <p>
-            <strong>Power:</strong> 600–780 hp
-          </p>
-          <p>
-            <strong>Availability:</strong> See market sites for details
-          </p>
+          <h1 className={styles.truckTitle}>
+            {productInfo?.name || "Loading..."}
+          </h1>
+          <div className={styles.priceSection}>
+            <span className={styles.priceLabel}>Giá bán:</span>
+            <span className={styles.priceValue}>
+              {productInfo ? formatPrice(productInfo.price) : "Đang cập nhật"}
+            </span>
+          </div>
+          <div className={styles.description}>
+            <p>
+              {productInfo?.short_description || "Đang cập nhật thông tin..."}
+            </p>
+          </div>
+          <div className={styles.buttonDown}>
+            <button className={styles.buyNowButton} onClick={scrollToDetails}>
+              Mô tả chi tiết <ArrowDownOutlined />
+            </button>
+          </div>
         </div>
         <div className={styles.imageContent}>
           <img
-            src="https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/volvo-fh16-aero-cgi-exterior-1?qlt=82&wid=1024&ts=1706022245131&dpr=off&fit=constrain&fmt=png-alpha" // Thay bằng đường dẫn ảnh thật
-            alt="Volvo FH16 Aero"
+            src={productInfo?.thumbnail || Defaultimage}
+            alt={productInfo?.name || "Product Image"}
             className={styles.truckImage}
+            onError={(e) => {
+              e.target.src = Defaultimage;
+            }}
           />
         </div>
       </section>
-      <div className={styles.container}>
+      {/* Chi tiết sản phẩm */}
+      <div ref={detailsRef} className={styles.container}>
         {/* Hỉnh ảnh chi tiết sản phẩm */}
         <section className={styles.container}>
           {/* Grid container cho layout 2 cột */}
@@ -221,16 +320,24 @@ const ProductDetail = () => {
             {/* Cột 2: Phần thông tin */}
             <div className={styles.productInfoSection}>
               <h2 className={styles.productModel}>
-                MODEL {sampleProduct.model}
+                MODEL {/* Add model from API */}
               </h2>
-              <h3 className={styles.productTitle}>{sampleProduct.name}</h3>
-              <ul className={styles.productSpecs}>
-                {sampleProduct.specs.map((spec, index) => (
-                  <li key={index} className={styles.productSpecItem}>
-                    <strong>{spec.label}:</strong> {spec.value}
-                  </li>
-                ))}
-              </ul>
+              <h3 className={styles.productTitle}>{/* Add name from API */}</h3>
+
+              {isLoading ? (
+                <div className={styles.loading}>Loading specifications...</div>
+              ) : error ? (
+                <div className={styles.error}>{error}</div>
+              ) : (
+                <ul className={styles.productSpecs}>
+                  {formatSpecifications().map((spec, index) => (
+                    <li key={index} className={styles.productSpecItem}>
+                      <strong>{spec.label}:</strong> {spec.value}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               <div className={styles.actionButtons}>
                 <button
                   className={styles.buyNowButton}
@@ -287,20 +394,21 @@ const ProductDetail = () => {
         </section>
       </div>
 
-      <TechnicalDetailsModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        productDetails={technicalDetails}
-      />
-
       <OrderModal
         isOpen={isOrderModalOpen}
         onClose={() => setIsOrderModalOpen(false)}
         productInfo={{
-          name: sampleProduct.name,
-          model: sampleProduct.model,
-          image: sampleProduct.image,
+          name: productInfo?.name || "Loading...",
+          model: productInfo?.slug || "",
+          image: productInfo?.thumbnail || Defaultimage,
         }}
+      />
+
+      <TechnicalDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        specifications={formatSpecifications()}
+        technicalDetails={technicalDetails}
       />
     </div>
   );

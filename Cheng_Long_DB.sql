@@ -42,14 +42,22 @@ CREATE TABLE products (
 );
 
 -- Bảng thông số kỹ thuật
-CREATE TABLE specifications (
+CREATE TABLE product_specifications (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT,
-    spec_name VARCHAR(100) NOT NULL,
-    spec_value TEXT NOT NULL,
+    product_id INT NOT NULL,
+    class VARCHAR(50),
+    used_for VARCHAR(100),
+    max_horsepower VARCHAR(50),
+    peak_torque VARCHAR(50),
+    front_axle_suspension VARCHAR(50),
+    rear_axle_suspension VARCHAR(50),
+    sleeper VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
+RENAME TABLE specifications TO product_specifications;
 -- Bảng hình ảnh sản phẩm
 CREATE TABLE product_images (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -85,15 +93,14 @@ CREATE TABLE inquiries (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
--- Cập nhật bảng users
-CREATE TABLE IF NOT EXISTS users (
+-- Bảng người dùng (admin)
+CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(20) UNIQUE, 
     full_name VARCHAR(100),
-    role ENUM('admin', 'editor', 'user') DEFAULT 'user',
+    role ENUM('admin', 'editor') DEFAULT 'editor',
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

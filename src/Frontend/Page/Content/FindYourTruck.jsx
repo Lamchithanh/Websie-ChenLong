@@ -6,13 +6,15 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useLoading } from "../../contexts/LoadingContext";
+import Loading from "../../Components/Loading/Loading";
 
 const FindYourTruck = () => {
   const navigate = useNavigate();
+  const { loading, showLoading, hideLoading } = useLoading();
   const [trucks, setTrucks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AOS.init({
@@ -44,8 +46,8 @@ const FindYourTruck = () => {
   // Fetch trucks data khi category thay đổi
   useEffect(() => {
     const fetchTrucks = async () => {
-      setLoading(true);
       try {
+        showLoading("Đang tải danh sách xe...");
         const response = await fetch(
           `http://localhost:5000/api/orders/trucks?category=${activeCategory}`
         );
@@ -56,12 +58,12 @@ const FindYourTruck = () => {
       } catch (error) {
         console.error("Error fetching trucks:", error);
       } finally {
-        setLoading(false);
+        hideLoading();
       }
     };
 
     fetchTrucks();
-  }, [activeCategory]);
+  }, [activeCategory, showLoading, hideLoading]);
 
   const getSliderSettings = () => {
     const itemCount = trucks.length;
@@ -101,9 +103,13 @@ const FindYourTruck = () => {
     };
   };
 
-  const handleProductClick = () => {
-    navigate("/product");
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
   };
+
+  if (loading) {
+    return null; // Loading sẽ được hiển thị bởi LoadingProvider
+  }
 
   return (
     <section className={styles.findYourTruck}>
@@ -131,7 +137,7 @@ const FindYourTruck = () => {
                 <div
                   key={index}
                   className={styles.truckItem}
-                  onClick={handleProductClick}
+                  onClick={() => handleProductClick(truck.id)}
                   style={{ cursor: "pointer" }}
                 >
                   <img

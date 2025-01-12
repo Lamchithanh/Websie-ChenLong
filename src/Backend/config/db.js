@@ -27,9 +27,9 @@ const checkConnection = async () => {
     const connection = await pool.getConnection();
     console.log("Database connected successfully");
 
-    // Test query
-    const [rows] = await connection.query("SELECT * FROM products");
-    console.log("Products in database:", rows);
+    // Test query để kiểm tra các bảng
+    const [tables] = await connection.query("SHOW TABLES");
+    console.log("Available tables:", tables);
 
     connection.release();
   } catch (err) {
@@ -38,6 +38,7 @@ const checkConnection = async () => {
   }
 };
 
+// Thực hiện kiểm tra kết nối
 checkConnection();
 
 export default pool;

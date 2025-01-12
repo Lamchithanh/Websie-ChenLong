@@ -7,6 +7,7 @@ import {
   getWardsByDistrictCode,
 } from "../../services/locationApi.js";
 import TermsAndConditions from "../../Components/TermsAndConditions/TermsAndConditions";
+import Defaultimage from "../../../assets/Image/Image_Chenglong.jpg";
 
 const OrderModal = ({ isOpen, onClose, productInfo }) => {
   const [provinces, setProvinces] = useState([]);
@@ -85,7 +86,13 @@ const OrderModal = ({ isOpen, onClose, productInfo }) => {
 
         <div className={styles.modalBody}>
           <div className={styles.productInfo}>
-            <img src={productInfo.image} alt={productInfo.name} />
+            <img
+              src={productInfo.image || Defaultimage}
+              alt={productInfo.name}
+              onError={(e) => {
+                e.target.src = Defaultimage;
+              }}
+            />
             <div className={styles.productDetails}>
               <h3>{productInfo.name}</h3>
               <p>Model: {productInfo.model}</p>

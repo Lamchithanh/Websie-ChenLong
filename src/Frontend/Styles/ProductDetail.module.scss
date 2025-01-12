@@ -8,6 +8,81 @@
     margin-top: 20px;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
   }
+
+  .textContent {
+    flex: 0 1 40%;
+    padding-right: 40px;
+
+    .truckTitle {
+      font-size: 32px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .priceSection {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 8px;
+
+      .priceLabel {
+        display: block;
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .priceValue {
+        display: block;
+        font-size: 24px;
+        font-weight: 600;
+        color: #ff4d4f;
+      }
+    }
+
+    .description {
+      margin: 20px 0;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .buttonGroup {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+
+      button {
+        flex: 1;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.buyNowButton {
+          background: #ff4d4f;
+          color: white;
+          border: none;
+
+          &:hover {
+            background: #ff7875;
+          }
+        }
+
+        &.viewMoreButton {
+          background: white;
+          color: #ff4d4f;
+          border: 1px solid #ff4d4f;
+
+          &:hover {
+            background: #fff1f0;
+          }
+        }
+      }
+    }
+  }
 }
 
 .container {
@@ -41,6 +116,14 @@
   padding-right: 40px;
 }
 
+.buttonDown button {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
 .truckTitle {
   font-size: 28px;
   font-weight: bold;
@@ -56,14 +139,26 @@ p {
 
 .imageContent {
   flex: 0 1 60%;
+  width: 100%;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f8f8f8;
 
-  img {
-    width: 100%;
-    max-width: 800px;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-    margin-left: auto;
+  img.truckImage {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }
 
@@ -467,5 +562,23 @@ p {
       width: 60px;
       height: 60px;
     }
+  }
+}
+
+@media (max-width: 1024px) {
+  .imageContent {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .imageContent {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageContent {
+    height: 250px;
   }
 }

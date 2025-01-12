@@ -1,28 +1,34 @@
 .productList {
   padding: 40px 20px;
-  background: #fff;
+  background: #f5f5f5;
 
   .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 15px;
   }
 
   .productsGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
+    padding: 20px 0;
   }
 
   .productCard {
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    background: #fff;
+    background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
     &:hover {
       transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 
       .imageContainer img {
         transform: scale(1.05);
@@ -32,9 +38,9 @@
     .imageContainer {
       position: relative;
       width: 100%;
-      padding-top: 66.67%; // 3:2 aspect ratio
+      padding-top: 66.67%;
       overflow: hidden;
-      background: #f5f5f5;
+      background: #f8f8f8;
 
       img {
         position: absolute;
@@ -45,83 +51,115 @@
         object-fit: cover;
         transition: transform 0.3s ease;
       }
+    }
 
-      .modelOverlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-        color: white;
-        text-align: center;
+    .productInfo {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-        span {
-          display: block;
-          font-size: 12px;
-          margin-bottom: 5px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
+    .modelSection {
+      text-align: center;
+      margin-bottom: 20px;
 
-        h3 {
-          font-size: 32px;
-          margin: 0;
-          font-weight: 500;
-        }
+      .modelLabel {
+        display: block;
+        font-size: 14px;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .modelNumber {
+        font-size: 32px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
       }
     }
 
-    .productSpecs {
-      padding: 20px;
-      text-align: center;
+    .specsList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
 
-      .productName {
-        font-size: 18px;
-        font-weight: 600;
+    .specItem {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.4;
+
+      span {
+        display: block;
+        text-align: center;
+      }
+
+      &:first-child {
+        font-weight: 500;
         color: #333;
-        margin: 0 0 10px;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    padding-bottom: 20px;
+
+    .pageButton {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #f5f5f5;
+        color: #333;
       }
 
-      .specRow {
-        margin: 10px 0;
+      &.active {
+        background: #ff4d4f;
+        color: white;
+        border-color: #ff4d4f;
 
-        .specValue {
-          color: #666;
-          font-size: 14px;
-          line-height: 1.6;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      }
-
-      .priceRow {
-        margin-top: 15px;
-
-        .price {
-          font-size: 18px;
-          font-weight: 600;
-          color: #ff4d4f;
+        &:hover {
+          background: #ff7875;
         }
       }
     }
   }
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 1.2rem;
-}
-
-@media (max-width: 1024px) {
+// Responsive styles
+@media (max-width: 1200px) {
   .productList {
+    .container {
+      max-width: 960px;
+    }
+
     .productsGrid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      gap: 25px;
+    }
+
+    .productCard {
+      .modelSection {
+        .modelNumber {
+          font-size: 28px;
+        }
+      }
     }
   }
 }
@@ -129,20 +167,77 @@
 @media (max-width: 768px) {
   .productList {
     padding: 20px 15px;
+
+    .container {
+      padding: 0 10px;
+    }
+
+    .productsGrid {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+
+    .productCard {
+      .modelSection {
+        .modelNumber {
+          font-size: 24px;
+        }
+      }
+
+      .specItem {
+        font-size: 13px;
+
+        &:first-child {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .pagination {
+      margin-top: 30px;
+
+      .pageButton {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+    }
   }
 }
 
 @media (max-width: 480px) {
   .productList {
-    .productsGrid {
-      grid-template-columns: 1fr;
-    }
+    padding: 15px 10px;
 
     .productCard {
-      .modelOverlay {
-        h3 {
-          font-size: 28px;
+      .imageContainer {
+        padding-top: 75%;
+      }
+
+      .modelSection {
+        .modelLabel {
+          font-size: 12px;
         }
+
+        .modelNumber {
+          font-size: 22px;
+        }
+      }
+
+      .specItem {
+        font-size: 12px;
+
+        &:first-child {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .pagination {
+      gap: 5px;
+
+      .pageButton {
+        padding: 5px 10px;
+        font-size: 12px;
       }
     }
   }
