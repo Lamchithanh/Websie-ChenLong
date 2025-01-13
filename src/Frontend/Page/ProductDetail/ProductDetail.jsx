@@ -322,6 +322,7 @@ const ProductDetail = () => {
               <h2 className={styles.productModel}>
                 MODEL {/* Add model from API */}
               </h2>
+
               <h3 className={styles.productTitle}>{/* Add name from API */}</h3>
 
               {isLoading ? (

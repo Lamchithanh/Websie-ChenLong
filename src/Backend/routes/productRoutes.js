@@ -7,23 +7,27 @@ const router = express.Router();
 router.get("/test", (req, res) => {
   res.json({ message: "Products API is working" });
 });
-
-// Get all products
 router.get("/products", async (req, res) => {
   try {
     console.log("API called: GET /products");
 
     const [products] = await db.query(`
-      SELECT 
-        p.*,
-        pi.image_url,
-        c.name as category_name
+      SELECT
+        p.id,
+        p.name,
+        p.slug,
+        p.price,
+        p.short_description,
+        p.thumbnail as image_url,
+        ps.max_horsepower,
+        ps.peak_torque,
+        ps.sleeper
       FROM products p
-      LEFT JOIN product_images pi ON p.id = pi.product_id
-      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN (
+        SELECT DISTINCT product_id, max_horsepower, peak_torque, sleeper
+        FROM product_specifications
+      ) ps ON p.id = ps.product_id
       WHERE p.status = 'active'
-      AND (pi.is_thumbnail = 1 OR pi.is_thumbnail IS NULL)  /* Lấy ảnh thumbnail */
-      ORDER BY p.created_at DESC
     `);
 
     console.log(`Found ${products.length} products`);
@@ -48,7 +52,6 @@ router.get("/products", async (req, res) => {
     });
   }
 });
-
 // Get specifications by product ID
 router.get("/products/:id/specifications", async (req, res) => {
   try {
@@ -60,11 +63,11 @@ router.get("/products/:id/specifications", async (req, res) => {
       SELECT TABLE_NAME 
       FROM information_schema.TABLES 
       WHERE TABLE_SCHEMA = 'WebSite_Chenglong' 
-      AND TABLE_NAME = 'specifications'
+      AND TABLE_NAME = 'product_specifications'
     `);
 
     if (tables.length === 0) {
-      console.error("Table specifications does not exist");
+      console.error("Table product_specifications does not exist");
       return res.status(500).json({
         success: false,
         message: "Lỗi cấu trúc database",
@@ -85,7 +88,7 @@ router.get("/products/:id/specifications", async (req, res) => {
 
     // Lấy thông số kỹ thuật
     const [specifications] = await db.query(
-      `SELECT * FROM specifications WHERE product_id = ?`,
+      `SELECT * FROM product_specifications WHERE product_id = ?`,
       [id]
     );
 

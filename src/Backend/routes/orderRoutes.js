@@ -115,7 +115,7 @@ router.get("/trucks", async (req, res) => {
     let query = `
       SELECT 
         p.*,
-        pi.image_url,
+        GROUP_CONCAT(pi.image_url) as images,
         c.name as category_name
       FROM products p
       LEFT JOIN product_images pi ON p.id = pi.product_id
@@ -137,7 +137,7 @@ router.get("/trucks", async (req, res) => {
     // Format lại dữ liệu để phù hợp với component
     const formattedTrucks = trucks.map((truck) => ({
       model: truck.model,
-      src: truck.image_url,
+      src: truck.images ? truck.images.split(",")[0] : null,
       name: truck.name,
       category: truck.category_name,
     }));

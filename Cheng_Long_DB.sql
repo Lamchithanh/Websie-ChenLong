@@ -59,6 +59,7 @@ CREATE TABLE product_specifications (
 
 RENAME TABLE specifications TO product_specifications;
 -- Bảng hình ảnh sản phẩm
+
 CREATE TABLE product_images (
     id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT,
