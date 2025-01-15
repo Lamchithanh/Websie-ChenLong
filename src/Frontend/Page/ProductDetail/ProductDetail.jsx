@@ -5,9 +5,10 @@ import TechnicalDetailsModal from "./TechnicalDetailsModal";
 import OrderModal from "./OrderModal";
 import BackButton from "../../Components/BackButton/BackButton";
 import { API_URL } from "../../../config/api";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import Defaultimage from "../../../assets/Image/Image_Chenglong.jpg";
+import Error from "../../../assets/Image/404_1.jpg";
 
 const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -22,6 +23,8 @@ const ProductDetail = () => {
   const { id } = useParams();
   const detailsRef = useRef(null);
   const { loading, showLoading, hideLoading } = useLoading();
+  const [productImages, setProductImages] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,23 +38,28 @@ const ProductDetail = () => {
 
         // Fetch product info
         const productResponse = await fetch(`${API_URL}/products/${id}`);
-        const productData = await productResponse.json();
+        if (productResponse.status === 404) {
+          navigate("/not-found"); // Redirect to NotFound page
+        } else {
+          const productData = await productResponse.json();
 
-        if (productData.success) {
-          setProductInfo(productData.data);
-        }
+          if (productData.success) {
+            setProductInfo(productData.data);
+          }
 
-        // Fetch specifications
-        const specResponse = await fetch(
-          `${API_URL}/products/${id}/specifications`
-        );
-        const specData = await specResponse.json();
+          // Fetch specifications
+          const specResponse = await fetch(
+            `${API_URL}/products/${id}/specifications`
+          );
+          const specData = await specResponse.json();
 
-        if (specData.success) {
-          setSpecifications(specData.data);
+          if (specData.success) {
+            setSpecifications(specData.data);
+          }
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Error fetching product details:", err);
+        setError("Đã xảy ra lỗi khi tải thông tin sản phẩm.");
       } finally {
         setIsLoading(false);
         hideLoading();
@@ -61,7 +69,32 @@ const ProductDetail = () => {
     if (id) {
       fetchData();
     }
-  }, [id, showLoading, hideLoading]);
+  }, [id, showLoading, hideLoading, navigate]);
+
+  useEffect(() => {
+    const fetchProductImages = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/product-images/${id}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setProductImages(data.data);
+        } else {
+          setError("Thông tin sản phẩm đang được cập nhật.");
+        }
+      } catch (err) {
+        console.error("Error fetching product images:", err);
+        setError("Đã xảy ra lỗi khi tải thông tin sản phẩm.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProductImages();
+    }
+  }, [id]);
 
   if (loading || isLoading) return null;
 
@@ -153,15 +186,13 @@ const ProductDetail = () => {
       const scrollAmount = 90; // 80px (width) + 10px (gap)
       if (direction === "left") {
         galleryRef.current.scrollLeft -= scrollAmount;
-        // Cập nhật ảnh chính khi scroll qua trái
         setCurrentImageIndex((prev) =>
-          prev > 0 ? prev - 1 : sampleProduct.gallery.length - 1
+          prev > 0 ? prev - 1 : productImages.length - 1
         );
       } else {
         galleryRef.current.scrollLeft += scrollAmount;
-        // Cập nhật ảnh chính khi scroll qua phải
         setCurrentImageIndex((prev) =>
-          prev < sampleProduct.gallery.length - 1 ? prev + 1 : 0
+          prev < productImages.length - 1 ? prev + 1 : 0
         );
       }
     }
@@ -285,36 +316,58 @@ const ProductDetail = () => {
           <div className={styles.productGrid}>
             {/* Cột 1: Phần hình ảnh */}
             <div className={styles.productImageSection}>
-              <img
-                src={sampleProduct.gallery[currentImageIndex]} // Sử dụng ảnh từ gallery theo index
-                alt={sampleProduct.name}
-                className={styles.mainProductImage}
-              />
-              <div className={styles.thumbnailGallery} ref={galleryRef}>
-                {sampleProduct.gallery.map((img, index) => (
+              {isLoading ? (
+                <p>Đang tải hình ảnh...</p>
+              ) : error ? (
+                <img
+                  src={Error}
+                  alt="Ảnh minh họa"
+                  className={styles.mainProductImage}
+                />
+              ) : (
+                <>
                   <img
-                    key={index}
-                    src={img}
-                    alt={`Thumbnail ${index + 1}`}
-                    className={`${styles.thumbnailImage} ${
-                      currentImageIndex === index ? styles.activeThumbnail : ""
-                    }`}
-                    onClick={() => handleThumbnailClick(index)}
+                    src={
+                      productImages[currentImageIndex]?.image_url ||
+                      Defaultimage
+                    }
+                    alt={`Hình ảnh sản phẩm ${currentImageIndex + 1}`}
+                    className={styles.mainProductImage}
+                    style={{
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      overflow: "hidden",
+                    }}
                   />
-                ))}
-              </div>
-              <button
-                className={`${styles.galleryNavButton} ${styles.prev}`}
-                onClick={() => scrollGallery("left")}
-              >
-                ←
-              </button>
-              <button
-                className={`${styles.galleryNavButton} ${styles.next}`}
-                onClick={() => scrollGallery("right")}
-              >
-                →
-              </button>
+                  <div className={styles.thumbnailGallery} ref={galleryRef}>
+                    {productImages.map((img, index) => (
+                      <img
+                        key={index}
+                        src={img.image_url}
+                        alt={`Thumbnail ${index + 1}`}
+                        className={`${styles.thumbnailImage} ${
+                          currentImageIndex === index
+                            ? styles.activeThumbnail
+                            : ""
+                        }`}
+                        onClick={() => handleThumbnailClick(index)}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    className={`${styles.galleryNavButton} ${styles.prev}`}
+                    onClick={() => scrollGallery("left")}
+                  >
+                    ←
+                  </button>
+                  <button
+                    className={`${styles.galleryNavButton} ${styles.next}`}
+                    onClick={() => scrollGallery("right")}
+                  >
+                    →
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Cột 2: Phần thông tin */}

@@ -242,3 +242,105 @@
     }
   }
 }
+// Pagination Styles
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 1rem 0;
+
+  .paginationList {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .pageItem {
+      display: inline-flex;
+
+      .pageLink,
+      .pageEllipsis {
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px hsla(359, 100%, 65%, 0.256);
+        }
+      }
+
+      .pageLink {
+        background-color: white;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+          background-color: #f3f4f6;
+          border-color: #d1d5db;
+        }
+
+        &:disabled {
+          background-color: #f3f4f6;
+          color: #9ca3af;
+          cursor: not-allowed;
+        }
+
+        &.active {
+          background-color: #ff4d4f;
+          color: white;
+          border-color: #ff4d4f;
+
+          &:hover {
+            background-color: white;
+            color: #ff4d4f;
+          }
+        }
+      }
+
+      .pageEllipsis {
+        color: #6b7280;
+        cursor: default;
+      }
+
+      // Navigation buttons (prev/next)
+      .navButton {
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          background-color: #f3f4f6;
+          border-color: #d1d5db;
+        }
+
+        &:disabled {
+          background-color: #f3f4f6;
+          color: #9ca3af;
+          cursor: not-allowed;
+        }
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}

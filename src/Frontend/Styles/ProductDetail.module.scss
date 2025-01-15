@@ -139,21 +139,23 @@ p {
 
 .imageContent {
   flex: 0 1 60%;
-  width: 100%;
-  height: 400px;
+  aspect-ratio: 16 / 9; // Add fixed aspect ratio
   position: relative;
   overflow: hidden;
   border-radius: 8px;
   background: #f8f8f8;
+  min-height: 400px; // Set minimum height
+  max-height: 600px; // Set maximum height
+  display: flex; // Add flexbox for better image centering
+  align-items: center;
+  justify-content: center;
 
   img.truckImage {
-    width: 90%;
-    height: 90%;
-    object-fit: cover;
-    object-position: center;
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; // Changed to contain to prevent distortion
+    position: relative; // Changed from absolute
+    padding: 20px; // Add padding to prevent image from touching edges
     transition: transform 0.3s ease;
 
     &:hover {
@@ -189,21 +191,24 @@ p {
 
 .productImageSection {
   .mainProductImage {
+    aspect-ratio: 16 / 9; // Add consistent aspect ratio
     width: 100%;
-    height: auto;
+    min-height: 400px;
     max-height: 500px;
     object-fit: contain;
     border-radius: 8px;
     margin-bottom: 20px;
     transition: all 0.3s ease;
     background-color: #f8f9fa;
-    padding: 10px;
+    padding: 20px;
 
     @media (max-width: 768px) {
+      min-height: 300px;
       max-height: 400px;
     }
 
     @media (max-width: 480px) {
+      min-height: 250px;
       max-height: 300px;
     }
   }

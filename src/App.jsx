@@ -9,6 +9,7 @@ import Login from "./Frontend/Components/Auth/Login";
 import Register from "./Frontend/Components/Auth/Register";
 import BackToTop from "./Frontend/Components/BackToTop/BackToTop";
 import ProductList from "./Frontend/Components/ProductList/ProductList";
+import NotFound from "./Frontend/Page/Content/NotFound";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <BackToTop />
       </Router>

@@ -5,6 +5,7 @@ import { RightOutlined } from "@ant-design/icons";
 import Banner from "../../Components/Banner/Banner";
 import styles from "../../Styles/HomePage.module.scss";
 import FindYourTruck from "../Content/FindYourTruck";
+import TruckBrands from "../Content/TruckBrands";
 
 const HomePage = () => {
   useEffect(() => {
@@ -21,7 +22,9 @@ const HomePage = () => {
       <div className={styles.bannerContainer} data-aos="fade-down">
         <Banner />
       </div>
-
+      <div className={styles.bannerContainer} data-aos="fade-down">
+        <TruckBrands />
+      </div>
       {/* Find Your Truck Section */}
       <div data-aos="fade-up">
         <FindYourTruck />

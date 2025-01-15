@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useLoading } from "../../contexts/LoadingContext";
-import Loading from "../../Components/Loading/Loading";
+import Defaultimage from "../../../assets/Image/Image_Chenglong.jpg";
 
 const FindYourTruck = () => {
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const FindYourTruck = () => {
     });
   }, []);
 
-  // Fetch categories khi component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -33,7 +32,9 @@ const FindYourTruck = () => {
         );
         const data = await response.json();
         if (data.success) {
-          setCategories(data.data);
+          // Thêm option "All" vào đầu danh sách categories
+          const allCategories = [{ id: 0, name: "All" }, ...data.data];
+          setCategories(allCategories);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -47,7 +48,7 @@ const FindYourTruck = () => {
   useEffect(() => {
     const fetchTrucks = async () => {
       try {
-        showLoading("Đang tải danh sách xe...");
+        showLoading();
         const response = await fetch(
           `http://localhost:5000/api/orders/trucks?category=${activeCategory}`
         );
@@ -65,51 +66,52 @@ const FindYourTruck = () => {
     fetchTrucks();
   }, [activeCategory, showLoading, hideLoading]);
 
-  const getSliderSettings = () => {
-    const itemCount = trucks.length;
-    return {
-      dots: false,
-      infinite: trucks.length > 5,
-      speed: 500,
-      slidesToShow: Math.min(5, Math.max(itemCount, 1)),
-      slidesToScroll: 1,
-      centerMode: false,
-      arrows: trucks.length > 5,
-      prevArrow: <button className={styles.arrowLeft}>&#10094;</button>,
-      nextArrow: <button className={styles.arrowRight}>&#10095;</button>,
-      responsive: [
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: Math.min(3, Math.max(itemCount, 2)),
-            arrows: trucks.length > 3,
-          },
-        },
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: Math.min(3, itemCount),
-            arrows: trucks.length > 3,
-          },
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: Math.min(2, itemCount),
-            arrows: trucks.length > 2,
-          },
-        },
-      ],
-    };
-  };
-
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
   };
 
-  if (loading) {
-    return null; // Loading sẽ được hiển thị bởi LoadingProvider
-  }
+  const getSliderSettings = () => ({
+    dots: false, // Tắt dots
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: false, // Tắt arrows
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: false,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: false,
+        },
+      },
+    ],
+  });
 
   return (
     <section className={styles.findYourTruck}>
@@ -118,13 +120,13 @@ const FindYourTruck = () => {
         <div className={styles.tabs} data-aos="fade-up">
           {categories.map((category) => (
             <button
-              key={category}
+              key={category.id}
               className={`${styles.tabButton} ${
-                activeCategory === category ? styles.activeTab : ""
-              } ${trucks.length === 0 ? styles.disabled : ""}`}
-              onClick={() => setActiveCategory(category)}
+                activeCategory === category.name ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveCategory(category.name)}
             >
-              {category}
+              {category.name}
             </button>
           ))}
         </div>
@@ -141,12 +143,16 @@ const FindYourTruck = () => {
                   style={{ cursor: "pointer" }}
                 >
                   <img
-                    src={truck.src}
-                    alt={`Model ${truck.model}`}
+                    src={truck.thumbnail || Defaultimage}
+                    alt={`Product ${truck.name}`} // Đảm bảo name là string
                     data-aos="flip-left"
                     data-aos-delay={index * 100}
+                    onError={(e) => {
+                      e.target.onerror = null; // Ngăn lỗi lặp vô hạn
+                      e.target.src = Defaultimage; // Đặt ảnh mặc định khi lỗi
+                    }}
                   />
-                  <h3>Model {truck.model}</h3>
+                  <p>{truck.name}</p>
                 </div>
               ))}
             </Slider>

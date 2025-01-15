@@ -1,20 +1,27 @@
 .findYourTruck {
-  padding: 50px 20px;
+  padding: 30px 10px; // Giảm padding tổng thể
   text-align: center;
 
   .container {
-    max-width: 1500px;
+    max-width: 1100px;
     margin: 0 auto;
+    padding: 0; // Bỏ padding container
+
+    @media (max-width: 768px) {
+      padding: 0;
+    }
   }
 
   h2 {
     font-size: 2rem;
     margin-bottom: 20px;
+
     @media (max-width: 768px) {
       font-size: 1.8rem;
     }
     @media (max-width: 480px) {
       font-size: 1.5rem;
+      margin-bottom: 15px;
     }
   }
 
@@ -22,22 +29,29 @@
   .tabs {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     margin-bottom: 30px;
-    flex-wrap: wrap; // Cho phép các nút xuống hàng nếu không đủ không gian
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      gap: 15px;
+      margin-bottom: 20px;
+    }
 
     button {
-      padding: 10px 20px;
+      padding: 5px 15px;
       border: none;
       background: transparent;
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       color: #666;
       position: relative;
       transition: all 0.3s ease;
+      white-space: nowrap;
 
-      &:hover {
-        color: #000;
+      @media (max-width: 480px) {
+        font-size: 0.85rem;
+        padding: 5px 10px;
       }
 
       &.activeTab {
@@ -50,7 +64,7 @@
           bottom: -5px;
           left: 0;
           right: 0;
-          height: 3px;
+          height: 2px;
           background-color: #ff0000;
           width: 100%;
         }
@@ -60,129 +74,50 @@
 
   /* Slider Wrapper */
   .sliderWrapper {
-    .slick-prev,
-    .slick-next {
-      z-index: 1;
-      color: #333;
-      font-size: 2rem;
-      line-height: 0;
-      opacity: 0.5;
+    margin: 0;
+    width: 100%;
 
-      &:hover {
-        opacity: 1;
-      }
-    }
-
-    .arrowLeft,
-    .arrowRight {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      z-index: 10;
-      border: none;
-    }
-
-    .arrowLeft {
-      left: 10px;
-    }
-
-    .arrowRight {
-      right: 10px;
-    }
-
-    .slick-prev {
-      left: -20px;
-      @media (max-width: 768px) {
-        left: -10px;
-      }
-    }
-
-    .slick-next {
-      right: -20px;
-      @media (max-width: 768px) {
-        right: -10px;
-      }
+    .slick-list {
+      margin: 0; // Reset margin
     }
 
     .slick-slide {
-      display: flex !important;
-      justify-content: space-around;
-      align-items: center;
-    }
+      padding: 0 5px; // Giảm padding giữa slides
 
-    .slick-slide {
-      margin: 0; // Giảm margin giữa các slides
+      @media (max-width: 768px) {
+        padding: 0 3px;
+      }
 
-      @media (max-width: 480px) {
-        margin: 0;
-        padding: 0 10px; // Thêm padding cho mobile
+      > div {
+        display: flex;
+        justify-content: center;
       }
     }
 
     .truckItem {
-      max-width: 160px;
-      margin: 0 auto; // Căn giữa item
+      width: 100%;
+      padding: 0; // Bỏ padding của item
 
-      @media (max-width: 480px) {
-        max-width: 100%; // Cho phép ảnh rộng tối đa trên mobile
-        margin: 0;
+      @media (max-width: 768px) {
+        width: 100%;
+        max-width: none; // Bỏ max-width để item lấp đầy không gian
       }
     }
 
     img {
-      max-width: 100%;
+      width: 100%;
       height: auto;
-      border-radius: 10px;
-      transition: transform 0.3s ease;
-      margin: 0 auto; // Căn giữa ảnh
+      max-height: none; // Bỏ max-height để ảnh giữ tỷ lệ tự nhiên
+      border-radius: 0; // Bỏ border-radius
+      object-fit: contain; // Đổi thành contain để hiển thị đầy đủ xe
+      aspect-ratio: 16/9; // Điều chỉnh tỷ lệ khung hình
 
-      @media (max-width: 480px) {
-        width: 100%; // Đảm bảo ảnh lấp đầy không gian
-        object-fit: contain;
-      }
-    }
-
-    h3 {
-      font-size: 1rem;
-      margin-top: 10px;
-
-      @media (max-width: 480px) {
-        .truckItem {
-          max-width: 140px;
-        }
+      @media (max-width: 768px) {
+        aspect-ratio: 4/3;
       }
     }
   }
 }
-
-.sliderItem {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  padding: 10px;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-}
-
-.tabButton {
-  &.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
 .loading {
   text-align: center;
   padding: 20px;

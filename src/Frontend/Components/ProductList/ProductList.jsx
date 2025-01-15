@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { API_URL } from "../../../config/api.js";
 import { useLoading } from "../../contexts/LoadingContext";
 import styles from "./ProductList.module.scss";
@@ -10,6 +11,10 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [specifications, setSpecifications] = useState({});
   const { loading, showLoading, hideLoading } = useLoading();
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 6;
 
   // Fetch products and specifications
   const fetchData = useCallback(async () => {
@@ -28,7 +33,7 @@ const ProductList = () => {
       const uniqueProductIds = new Set(
         productsData.data.map((product) => product.id)
       );
-      const specs = {}; // Reset specifications
+      const specs = {};
 
       await Promise.all(
         Array.from(uniqueProductIds).map(async (productId) => {
@@ -62,7 +67,6 @@ const ProductList = () => {
     }
   }, [showLoading, hideLoading]);
 
-  // Fetch data on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchData();
@@ -72,13 +76,58 @@ const ProductList = () => {
     navigate(`/product/${productId}`);
   };
 
+  // Pagination calculations
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  // Generate pagination range with dots
+  const getPaginationRange = () => {
+    const delta = 2;
+    const range = [];
+    const rangeWithDots = [];
+
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
+      range.push(i);
+    }
+
+    if (currentPage - delta > 2) {
+      rangeWithDots.push(1, "dots");
+    } else {
+      rangeWithDots.push(1);
+    }
+
+    rangeWithDots.push(...range);
+
+    if (currentPage + delta < totalPages - 1) {
+      rangeWithDots.push("dots", totalPages);
+    } else if (totalPages > 1) {
+      rangeWithDots.push(totalPages);
+    }
+
+    return rangeWithDots;
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0);
+  };
+
   if (loading) return null;
 
   return (
     <div className={styles.productList}>
       <div className={styles.container}>
         <div className={styles.productsGrid}>
-          {products.map((product) => {
+          {currentProducts.map((product) => {
             const spec = specifications[product.id] || {};
             return (
               <div
@@ -129,6 +178,57 @@ const ProductList = () => {
             );
           })}
         </div>
+
+        {/* Enhanced Pagination Controls */}
+        {totalPages > 1 && (
+          <nav className={styles.pagination}>
+            <ul className={styles.paginationList}>
+              {/* Previous Button */}
+              <li className={styles.pageItem}>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={styles.navButton}
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft />
+                </button>
+              </li>
+
+              {/* Page Numbers */}
+              {getPaginationRange().map((pageNumber, index) => (
+                <li key={index} className={styles.pageItem}>
+                  {pageNumber === "dots" ? (
+                    <span className={styles.pageEllipsis}>
+                      <MoreHorizontal />
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`${styles.pageLink} ${
+                        currentPage === pageNumber ? styles.active : ""
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  )}
+                </li>
+              ))}
+
+              {/* Next Button */}
+              <li className={styles.pageItem}>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={styles.navButton}
+                  aria-label="Next page"
+                >
+                  <ChevronRight />
+                </button>
+              </li>
+            </ul>
+          </nav>
+        )}
       </div>
     </div>
   );

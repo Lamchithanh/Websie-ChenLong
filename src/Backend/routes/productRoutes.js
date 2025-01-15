@@ -270,4 +270,41 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
+router.get("/product-images/:productId", async (req, res) => {
+  try {
+    const { productId } = req.params;
+    console.log("Fetching images for product ID:", productId);
+
+    const [images] = await db.query(
+      `
+      SELECT id, product_id, image_url, is_primary, display_order, created_at
+      FROM product_images
+      WHERE product_id = ?
+      ORDER BY display_order ASC, created_at ASC
+    `,
+      [productId]
+    );
+
+    if (!images || images.length === 0) {
+      console.log("No images found for product ID:", productId);
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy hình ảnh cho sản phẩm này",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: images,
+    });
+  } catch (error) {
+    console.error("Error fetching product images:", error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi khi lấy hình ảnh sản phẩm",
+      error: error.message,
+    });
+  }
+});
+
 export default router;
