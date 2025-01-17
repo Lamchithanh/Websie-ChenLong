@@ -41,10 +41,18 @@ const Register = () => {
         body: JSON.stringify({
           username: formData.username,
           email: formData.email,
-          password: formData.password,
+          password: formData.password, // Được hash tại backend
           full_name: formData.fullName,
           phone: formData.phone,
         }),
+      });
+
+      console.log("Payload sent to API:", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password, // Kiểm tra mật khẩu trước khi gửi
+        full_name: formData.fullName,
+        phone: formData.phone,
       });
 
       const data = await response.json();
@@ -68,15 +76,15 @@ const Register = () => {
         {error && <div className={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor="username">Tên đăng nhập</label>
+            <label htmlFor="fullName">Họ và tên</label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
               onChange={handleChange}
               required
-              placeholder="Nhập tên đăng nhập"
+              placeholder="Nhập họ và tên"
             />
           </div>
 
@@ -90,19 +98,6 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Nhập email"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="fullName">Họ và tên</label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-              placeholder="Nhập họ và tên"
             />
           </div>
 

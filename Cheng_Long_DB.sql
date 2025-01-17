@@ -57,8 +57,6 @@ CREATE TABLE product_specifications (
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-RENAME TABLE specifications TO product_specifications;
--- Bảng hình ảnh sản phẩm
 
 CREATE TABLE product_images (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -73,12 +71,15 @@ CREATE TABLE product_images (
 -- Bảng khách hàng
 CREATE TABLE customers (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    phone VARCHAR(20) UNIQUE,
+    user_id INT NOT NULL, -- Liên kết với bảng users
+    avatar VARCHAR(200),
+    email VARCHAR(100) UNIQUE, -- Không bắt buộc
+    id_card VARCHAR(20) UNIQUE, -- Không bắt buộc
+    phone VARCHAR(20) UNIQUE, -- Không bắt buộc
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_customer FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Bảng yêu cầu tư vấn
@@ -97,12 +98,14 @@ CREATE TABLE inquiries (
 -- Bảng người dùng (admin)
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     full_name VARCHAR(100),
-    role ENUM('admin', 'editor') DEFAULT 'editor',
+    role ENUM('admin', 'editor', 'user') DEFAULT 'editor',
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+
+

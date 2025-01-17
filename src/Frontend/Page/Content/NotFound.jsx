@@ -1,47 +1,60 @@
 import { useNavigate } from "react-router-dom";
-import { Home, RefreshCw } from "lucide-react";
+import { Home, RefreshCw, Mail } from "lucide-react";
 import styles from "../../Styles/NotFound.module.scss";
 
 const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.notFound}>
-      <div className={styles.container}>
-        <h1 className={styles.title404}>404</h1>
-
-        <div className={styles.mainContent}>
-          <h2 className={styles.heading}>Ôi không! Không tìm thấy trang</h2>
-          <p className={styles.description}>
-            Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên hoặc tạm thời
-            không khả dụng.
-          </p>
-
-          <div className={styles.iconContainer}>
-            <RefreshCw className="w-12 h-12 text-gray-400 animate-spin" />
-            <Home className="w-12 h-12 text-gray-400 animate-pulse" />
-          </div>
-
-          <div className={styles.buttonContainer}>
-            <button
-              onClick={() => navigate("/")}
-              className={styles.primaryButton}
-            >
-              <Home className="w-5 h-5" />
-              Về Trang Chủ
-            </button>
-            <button
-              onClick={() => navigate(-1)}
-              className={styles.secondaryButton}
-            >
-              <RefreshCw className="w-5 h-5" />
-              Quay Lại
-            </button>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        {/* 404 Title with decorative elements */}
+        <div className={styles.relativeWrapper}>
+          <h1 className={styles.title}>404</h1>
+          <div className={styles.imageWrapper}>
+            <img
+              src="/api/placeholder/96/96"
+              alt="404 illustration"
+              className={styles.image}
+            />
           </div>
         </div>
 
-        <div className={styles.footer}>
-          <p>Cần trợ giúp? Liên hệ với đội hỗ trợ của chúng tôi</p>
+        <div className={styles.contentWrapper}>
+          {/* Main Content */}
+          <div>
+            <h2 className={styles.subtitle}>Ôi không! Không tìm thấy trang</h2>
+            <p className={styles.description}>
+              Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên hoặc tạm thời
+              không khả dụng.
+            </p>
+          </div>
+
+          {/* Animated Icons */}
+          <div className={styles.iconWrapper}>
+            <RefreshCw className={styles.spinIcon} />
+            <Home className={styles.bounceIcon} />
+          </div>
+
+          {/* Buttons */}
+          <div className={styles.buttonGroup}>
+            <button onClick={() => navigate("/")} className={styles.homeButton}>
+              <Home className={styles.icon} />
+              <span>Về Trang Chủ</span>
+            </button>
+            <button onClick={() => navigate(-1)} className={styles.backButton}>
+              <RefreshCw className={styles.icon} />
+              <span>Quay Lại</span>
+            </button>
+          </div>
+
+          {/* Help Section */}
+          <div className={styles.helpSection}>
+            <p className={styles.helpText}>
+              <Mail className={styles.icon} />
+              Cần trợ giúp? Liên hệ với đội hỗ trợ của chúng tôi
+            </p>
+          </div>
         </div>
       </div>
     </div>

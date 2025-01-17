@@ -26,9 +26,10 @@ router.post("/login", async (req, res) => {
     console.log("Login data:", { email, password });
 
     // Kiểm tra user trong database với email
-    const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
+    const [users] = await db.query(
+      "SELECT id, email, password, full_name FROM users WHERE email = ?",
+      [email]
+    );
 
     console.log("Database response:", users);
 
@@ -44,11 +45,11 @@ router.post("/login", async (req, res) => {
     console.log("Found user:", {
       id: user.id,
       email: user.email,
-      username: user.username,
+      fullName: user.full_name,
     });
 
     // So sánh mật khẩu
-    const isValidPassword = password === user.password;
+    const isValidPassword = await bcrypt.compare(password, user.password);
     console.log("Password validation:", {
       isValid: isValidPassword,
       provided: password,
@@ -67,8 +68,7 @@ router.post("/login", async (req, res) => {
       {
         id: user.id,
         email: user.email,
-        username: user.username,
-        role: user.role,
+        fullName: user.full_name,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
@@ -81,9 +81,7 @@ router.post("/login", async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        username: user.username,
         fullName: user.full_name,
-        role: user.role,
       },
     });
   } catch (error) {
@@ -118,35 +116,50 @@ router.get("/users", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, full_name, phone } = req.body;
-    console.log("Register attempt:", { username, email, full_name, phone });
+    const { email, password, full_name, phone } = req.body;
+    console.log("Register attempt:", { email, full_name, phone });
 
-    // Kiểm tra username, email và phone đã tồn tại chưa
+    // Kiểm tra email và phone đã tồn tại trong bảng users hoặc customers
     const [existingUsers] = await db.query(
-      "SELECT * FROM users WHERE username = ? OR email = ? OR phone = ?",
-      [username, email, phone]
+      `SELECT * FROM users 
+       WHERE email = ? 
+       OR EXISTS (
+         SELECT 1 FROM customers WHERE phone = ?
+       )`,
+      [email, phone]
     );
 
     if (existingUsers.length > 0) {
       return res.status(400).json({
         success: false,
-        message: "Tên đăng nhập, email hoặc số điện thoại đã tồn tại",
+        message: "Email hoặc số điện thoại đã tồn tại",
       });
     }
 
-    // Thêm user mới với số điện thoại
-    const [result] = await db.query(
-      `INSERT INTO users (username, email, password, full_name, phone) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [username, email, password, full_name, phone]
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed Password:", hashedPassword);
+
+    // Tạo user mới trong bảng users
+    const [userResult] = await db.query(
+      "INSERT INTO users (email, password, full_name) VALUES (?, ?, ?)",
+      [email, hashedPassword, full_name]
     );
 
-    console.log("User created:", result.insertId);
+    console.log("User created:", userResult.insertId);
+
+    // Lưu số điện thoại vào bảng customers
+    const [customerResult] = await db.query(
+      "INSERT INTO customers (user_id, phone) VALUES (?, ?)",
+      [userResult.insertId, phone]
+    );
+
+    console.log("Customer phone added:", customerResult.insertId);
 
     res.status(201).json({
       success: true,
       message: "Đăng ký thành công",
-      userId: result.insertId,
+      userId: userResult.insertId,
     });
   } catch (error) {
     console.error("Register error:", error);

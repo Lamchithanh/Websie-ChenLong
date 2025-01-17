@@ -1,0 +1,304 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff4d4f, #ed63bf);
+    border-radius: 2px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.subtitle {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.orderCard {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  &.selected {
+    border: 2px solid #3182ce;
+  }
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  background: linear-gradient(to right, #ffffff, #f7fafc);
+}
+
+.orderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.orderIdGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  h2 {
+    font-size: 1.25rem;
+    color: #2d3748;
+    font-weight: 600;
+  }
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.orderDate {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.icon {
+  color: #4a5568;
+}
+
+.chevron {
+  color: #718096;
+  transition: transform 0.3s ease;
+}
+
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusDelivered {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.statusProcessing {
+  background-color: #bee3f8;
+  color: #2a4365;
+}
+
+.statusShipping {
+  background-color: #feebc8;
+  color: #744210;
+}
+
+.statusDefault {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.orderDetails {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  transform: translateY(-10px);
+
+  &.expanded {
+    max-height: 2000px;
+    opacity: 1;
+    transform: translateY(0);
+    padding: 1.5rem;
+  }
+}
+
+.trackingInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: #f7fafc;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px dashed #e2e8f0;
+}
+
+.infoGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    color: #718096;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  span {
+    color: #2d3748;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.estimatedDelivery {
+  color: #3182ce !important;
+}
+
+.itemsList {
+  h3 {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #edf2f7;
+  }
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+  border: 1px solid #edf2f7;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f7fafc;
+  }
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemNameGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.itemName {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.itemQuantity {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.itemPrice {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+.orderFooter {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f7fafc;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+
+  span:first-child {
+    color: #4a5568;
+  }
+}
+
+.totalAmount {
+  font-size: 1.25rem;
+  color: #3182ce;
+  font-weight: 700;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detailsButton {
+  padding: 10px 20px;
+  font-size: 12px;
+  color: #63b3ed;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    color: #4a5568;
+  }
+}
+.qrCodeImage {
+  margin: 10px auto;
+  display: block;
+}

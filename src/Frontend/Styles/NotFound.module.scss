@@ -1,101 +1,162 @@
-.notFound {
+.container {
   min-height: 100vh;
-  background-color: rgb(249 250 251);
+  background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
 
-  .container {
-    max-width: 42rem;
-    width: 100%;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-      0 8px 10px -6px rgb(0 0 0 / 0.1);
-    padding: 2rem;
-    text-align: center;
+.card {
+  max-width: 36rem;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  margin: auto;
+}
+
+.relativeWrapper {
+  position: relative;
+}
+
+.title {
+  font-size: 6rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.imageWrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.contentWrapper {
+  margin-top: 2rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: #475569;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.spinIcon {
+  width: 4rem;
+  height: 4rem;
+  color: #ff4d4f;
+  animation: spin 1s linear infinite;
+}
+
+.bounceIcon {
+  width: 4rem;
+  height: 4rem;
+  color: #ff4d4f;
+  animation: bounce 1s infinite;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.homeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #ff4d4f;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  &:hover {
+    background: #ff4d4f;
   }
+}
 
-  .title404 {
-    font-size: 9rem;
-    line-height: 1;
-    font-weight: 700;
-    color: #ff4d4f;
-    margin-bottom: 1rem;
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f1f5f9;
+  border: #666 2px solid;
+  color: #374151;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  &:hover {
+    background: #e5e7eb;
   }
+}
 
-  .mainContent {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+.helpSection {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
 
-    .heading {
-      font-size: 1.875rem;
-      line-height: 2.25rem;
-      font-weight: 600;
-      color: rgb(31 41 55);
-    }
+.helpText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #475569;
+}
 
-    .description {
-      font-size: 1.125rem;
-      line-height: 1.75rem;
-      color: rgb(75 85 99);
-      max-width: 28rem;
-      margin: 0 auto;
-    }
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
 
-    .iconContainer {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 2rem 0;
-    }
-
-    .buttonContainer {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      justify-content: center;
-
-      @media (min-width: 640px) {
-        flex-direction: row;
-      }
-
-      button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        transition: all 200ms;
-
-        &.primaryButton {
-          background-color: #ff4d4f;
-          color: white;
-
-          &:hover {
-            background-color: darken(#ff4d4f, 10%);
-          }
-        }
-
-        &.secondaryButton {
-          border: 2px solid #ff4d4f;
-          color: #ff4d4f;
-
-          &:hover {
-            background-color: rgba(#ff4d4f, 0.05);
-          }
-        }
-      }
-    }
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-  .footer {
-    margin-top: 3rem;
-    color: rgb(75 85 99);
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.5rem);
   }
 }

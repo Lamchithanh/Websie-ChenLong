@@ -4,6 +4,7 @@ import styles from "../../Styles/FindYourTruck.module.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config/api.js";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useLoading } from "../../contexts/LoadingContext";
@@ -27,9 +28,7 @@ const FindYourTruck = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/orders/truck-categories"
-        );
+        const response = await fetch(`${API_URL}/orders/truck-categories`);
         const data = await response.json();
         if (data.success) {
           // Thêm option "All" vào đầu danh sách categories
@@ -50,7 +49,7 @@ const FindYourTruck = () => {
       try {
         showLoading();
         const response = await fetch(
-          `http://localhost:5000/api/orders/trucks?category=${activeCategory}`
+          `${API_URL}/orders/trucks?category=${activeCategory}`
         );
         const data = await response.json();
         if (data.success) {

@@ -4,6 +4,8 @@ import styles from "../../Styles/Header.module.scss";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { toast } from "react-toastify";
+import Avatar from "../../../assets/Image/avatar.jpg";
+import Logo from "../../../assets/Image/logo_2.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -45,6 +47,10 @@ const Header = () => {
   const handleSettingsClick = (e) => {
     e.preventDefault();
     setIsOffCanvasOpen(!isOffCanvasOpen);
+  };
+
+  const handleMenuItemClick = () => {
+    setIsOffCanvasOpen(false);
   };
 
   // Đóng off-canvas khi click ra ngoài
@@ -179,12 +185,7 @@ const Header = () => {
             // Menu khi đã đăng nhập
             <>
               <div className={styles.userInfo}>
-                <img
-                  src="https://img.icons8.com/ios/50/user-circle.png"
-                  alt="user"
-                  width="40"
-                  height="40"
-                />
+                <img src={Avatar} alt="user" width="40" height="40" />
                 <div className={styles.userDetails}>
                   <span className={styles.userName}>{user.fullName}</span>
                   <span className={styles.userEmail}>{user.email}</span>
@@ -193,7 +194,11 @@ const Header = () => {
 
               <div className={styles.menuDivider} />
 
-              <NavLink to="/profile" className={styles.menuItem}>
+              <NavLink
+                to="/customer-profile"
+                className={styles.menuItem}
+                onClick={handleMenuItemClick}
+              >
                 <img
                   src="https://img.icons8.com/ios/50/user--v1.png"
                   alt="profile"
@@ -203,7 +208,11 @@ const Header = () => {
                 <span>Thông tin cá nhân</span>
               </NavLink>
 
-              <NavLink to="/orders" className={styles.menuItem}>
+              <NavLink
+                to="/truck-orders"
+                className={styles.menuItem}
+                onClick={handleMenuItemClick}
+              >
                 <img
                   src="https://img.icons8.com/ios/50/purchase-order.png"
                   alt="orders"
@@ -228,7 +237,11 @@ const Header = () => {
           ) : (
             // Menu khi chưa đăng nhập
             <>
-              <NavLink to="/login" className={styles.menuItem}>
+              <NavLink
+                to="/login"
+                className={styles.menuItem}
+                onClick={handleMenuItemClick}
+              >
                 <img
                   src="https://img.icons8.com/ios/50/login-rounded.png"
                   alt="login"

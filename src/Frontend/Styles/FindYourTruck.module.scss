@@ -97,6 +97,7 @@
     .truckItem {
       width: 100%;
       padding: 0; // Bỏ padding của item
+      cursor: pointer;
 
       @media (max-width: 768px) {
         width: 100%;
